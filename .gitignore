@@ -39,3 +39,10 @@ htmlcov/
 # Local databases & logs
 *.db
 *.log
+
+# Agent config & skills
+.agents/
+
+# Environment files
+.env
+.env.*
