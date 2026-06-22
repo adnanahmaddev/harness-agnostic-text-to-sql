@@ -2,9 +2,22 @@ import sys
 import os
 import argparse
 import json
+import datetime
+import decimal
+import uuid
 
 from text_to_sql.core import TextToSQL
 from text_to_sql.safety import SafetyValidator
+
+class DatabaseJSONEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, (datetime.datetime, datetime.date, datetime.time)):
+            return obj.isoformat()
+        if isinstance(obj, decimal.Decimal):
+            return float(obj)
+        if isinstance(obj, uuid.UUID):
+            return str(obj)
+        return super().default(obj)
 
 def load_env():
     """Load environment variables from a local .env file in the current directory if present."""
@@ -94,7 +107,7 @@ def main():
                 sys.exit(1)
                 
             if args.json:
-                print(json.dumps(result, indent=2))
+                print(json.dumps(result, indent=2, cls=DatabaseJSONEncoder))
             else:
                 # Pretty print as a Markdown table
                 columns = result["columns"]

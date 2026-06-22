@@ -100,11 +100,11 @@ if HAS_SQLALCHEMY:
             conn_str = db_uri
             
             # Standardize parameters for pyodbc
-            conn_str = re.sub(r"\bEncrypt=True\b", "Encrypt=yes", conn_str, flags=re.IGNORECASE)
-            conn_str = re.sub(r"\bEncrypt=False\b", "Encrypt=no", conn_str, flags=re.IGNORECASE)
-            conn_str = re.sub(r"\bTrustServerCertificate=True\b", "TrustServerCertificate=yes", conn_str, flags=re.IGNORECASE)
-            conn_str = re.sub(r"\bTrustServerCertificate=False\b", "TrustServerCertificate=no", conn_str, flags=re.IGNORECASE)
-            conn_str = re.sub(r"\bInitial Catalog\b", "Database", conn_str, flags=re.IGNORECASE)
+            conn_str = re.sub(r"\bEncrypt\s*=\s*True\b", "Encrypt=yes", conn_str, flags=re.IGNORECASE)
+            conn_str = re.sub(r"\bEncrypt\s*=\s*False\b", "Encrypt=no", conn_str, flags=re.IGNORECASE)
+            conn_str = re.sub(r"\bTrustServerCertificate\s*=\s*True\b", "TrustServerCertificate=yes", conn_str, flags=re.IGNORECASE)
+            conn_str = re.sub(r"\bTrustServerCertificate\s*=\s*False\b", "TrustServerCertificate=no", conn_str, flags=re.IGNORECASE)
+            conn_str = re.sub(r"\bInitial\s+Catalog\b", "Database", conn_str, flags=re.IGNORECASE)
             
             # Detect active directory default authentication
             has_ad_default = False
@@ -125,7 +125,7 @@ if HAS_SQLALCHEMY:
             if has_ad_default:
                 try:
                     from azure.identity import DefaultAzureCredential
-                    credential = DefaultAzureCredential()
+                    credential = DefaultAzureCredential(exclude_interactive_browser_credential=True)
                     token_obj = credential.get_token("https://database.windows.net/.default")
                     token_bytes = token_obj.token.encode("utf-16-le")
                     
@@ -142,11 +142,11 @@ if HAS_SQLALCHEMY:
             if "odbc_connect" in query_params:
                 odbc_conn_str = query_params["odbc_connect"][0]
                 # Standardize parameters
-                odbc_conn_str = re.sub(r"\bEncrypt=True\b", "Encrypt=yes", odbc_conn_str, flags=re.IGNORECASE)
-                odbc_conn_str = re.sub(r"\bEncrypt=False\b", "Encrypt=no", odbc_conn_str, flags=re.IGNORECASE)
-                odbc_conn_str = re.sub(r"\bTrustServerCertificate=True\b", "TrustServerCertificate=yes", odbc_conn_str, flags=re.IGNORECASE)
-                odbc_conn_str = re.sub(r"\bTrustServerCertificate=False\b", "TrustServerCertificate=no", odbc_conn_str, flags=re.IGNORECASE)
-                odbc_conn_str = re.sub(r"\bInitial Catalog\b", "Database", odbc_conn_str, flags=re.IGNORECASE)
+                odbc_conn_str = re.sub(r"\bEncrypt\s*=\s*True\b", "Encrypt=yes", odbc_conn_str, flags=re.IGNORECASE)
+                odbc_conn_str = re.sub(r"\bEncrypt\s*=\s*False\b", "Encrypt=no", odbc_conn_str, flags=re.IGNORECASE)
+                odbc_conn_str = re.sub(r"\bTrustServerCertificate\s*=\s*True\b", "TrustServerCertificate=yes", odbc_conn_str, flags=re.IGNORECASE)
+                odbc_conn_str = re.sub(r"\bTrustServerCertificate\s*=\s*False\b", "TrustServerCertificate=no", odbc_conn_str, flags=re.IGNORECASE)
+                odbc_conn_str = re.sub(r"\bInitial\s+Catalog\b", "Database", odbc_conn_str, flags=re.IGNORECASE)
                 
                 has_ad_default = False
                 ad_pattern = r"\bAuthentication\s*=\s*(?:Active\s*Directory\s*Default|ActiveDirectoryDefault)\b;?"
@@ -157,7 +157,7 @@ if HAS_SQLALCHEMY:
                 if has_ad_default:
                     try:
                         from azure.identity import DefaultAzureCredential
-                        credential = DefaultAzureCredential()
+                        credential = DefaultAzureCredential(exclude_interactive_browser_credential=True)
                         token_obj = credential.get_token("https://database.windows.net/.default")
                         token_bytes = token_obj.token.encode("utf-16-le")
                         
