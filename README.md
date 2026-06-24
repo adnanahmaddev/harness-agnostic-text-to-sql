@@ -1,5 +1,7 @@
 # Harness-Agnostic Text-to-SQL
 
+Developed as part of my portfolio at [adnanahmad.dev](https://adnanahmad.dev).
+
 A production-grade, IDE/agent-harness agnostic, and database-agnostic Python library that translates natural language queries into safe SQL statements and executes them against a database.
 
 ## Features
